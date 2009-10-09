@@ -46,7 +46,7 @@ Format: 1.4
 # --------------------------------------------------------------------------
 
 
-File: log  (ba-debug.js)
+File: JavaScript Debug: A simple wrapper for console.log  (no auto-title, ba-debug.js)
 
 Group: Index  {
 

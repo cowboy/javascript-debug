@@ -7,18 +7,22 @@ This code provides a simple wrapper for the console's logging methods, and was c
 
 Visit the [project page](http://benalman.com/projects/javascript-debug-console-log/) for more information and usage examples!
 
-## License ##
-Copyright (c) 2009 "Cowboy" Ben Alman  
-Licensed under the MIT license  
-[http://benalman.com/about/license/](http://benalman.com/about/license/)
 
 ## Documentation ##
 [http://benalman.com/code/projects/javascript-debug/docs/](http://benalman.com/code/projects/javascript-debug/docs/)
 
+
 ## Examples ##
-[http://benalman.com/code/test/js-debug/](http://benalman.com/code/test/js-debug/)
+[http://benalman.com/code/projects/javascript-debug/examples/debug/](http://benalman.com/code/projects/javascript-debug/examples/debug/)
+
 
 ## Support and Testing ##
 
 ### Browsers Tested ###
-Internet Explorer 6-8, Firefox 3, Safari 3-4, Chrome, Opera 9.
+Internet Explorer 6-8, Firefox 3-3.5, Safari 3-4, Chrome, Opera 9.
+
+
+## License ##
+Copyright (c) 2009 "Cowboy" Ben Alman  
+Licensed under the MIT license  
+[http://benalman.com/about/license/](http://benalman.com/about/license/)
