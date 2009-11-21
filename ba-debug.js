@@ -3,7 +3,7 @@
  * http://benalman.com/projects/javascript-debug-console-log/
  * 
  * Copyright (c) 2009 "Cowboy" Ben Alman
- * Licensed under the MIT license
+ * Dual licensed under the MIT and GPL licenses.
  * http://benalman.com/about/license/
  * 
  * With lots of help from Paul Irish!
@@ -24,7 +24,7 @@
 // About: License
 // 
 // Copyright (c) 2009 "Cowboy" Ben Alman,
-// Licensed under the MIT license.
+// Dual licensed under the MIT and GPL licenses.
 // http://benalman.com/about/license/
 // 
 // About: Support and Testing

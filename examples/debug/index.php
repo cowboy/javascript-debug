@@ -189,6 +189,7 @@ ob_end_clean();
 
 ob_start();
 ?>
+<?= $shell['donate'] ?>
 
 <h3>Examples</h3>
 
