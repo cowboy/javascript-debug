@@ -63,6 +63,7 @@ window.debug = (function(){
     // Some convenient shortcuts.
     aps = Array.prototype.slice,
     con = window.console,
+    opera = window.opera,
     
     // Public object to be returned.
     that = {},
@@ -179,11 +180,36 @@ window.debug = (function(){
         logs.push( log_arr );
         exec_callback( log_arr );
         
+        con = window.console; // A console might appears anytime
+        
         if ( !con || !is_level( idx ) ) { return; }
         
-        con.firebug ? con[ level ].apply( window, args )
-          : con[ level ] ? con[ level ]( args )
-          : con.log( args );
+        if ( con.firebug || window.Firebug ) // FireFox || Firebug Lite
+        {
+            con[ level ].apply( con, args );
+        }
+        else if ( opera && opera.postError ) // Opera
+        {
+            opera.postError.apply( opera, args );
+        }
+        else
+        {
+            if ( con[ level ] )
+            {
+                if( typeof( console.log.apply ) != "undefined")
+                {
+                    con[ level ].apply( con, args ); // Chrome
+                }
+                else
+                {
+                    con[ level ]( args ); // IE 8 (at least)
+                }
+            }
+            else // Fallback
+            {
+                con.log( args );
+            }
+        }
       };
       
     })( idx, log_methods[idx] );
