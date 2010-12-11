@@ -14,7 +14,7 @@
 //
 // *Version: 0.4, Last Updated: 6/22/2010*
 // 
-// Tested with Internet Explorer 6-8, Firefox 3-3.6, Safari 3-4, Chrome 3-5, Opera 9.6-10.5
+// Tested with Internet Explorer 6-8, Firefox 3-3.6, Safari 3-4, Chrome 3-8, Opera 9.6-11
 // 
 // Home       - http://benalman.com/projects/javascript-debug-console-log/
 // GitHub     - http://github.com/cowboy/javascript-debug/
@@ -27,13 +27,6 @@
 // Dual licensed under the MIT and GPL licenses.
 // http://benalman.com/about/license/
 // 
-// About: Support and Testing
-// 
-// Information about what browsers this code has been tested in.
-// 
-// Browsers Tested - Internet Explorer 6-8, Firefox 3-3.6, Safari 3-4, Chrome
-// 3-5, Opera 9.6-10.5
-// 
 // About: Examples
 // 
 // These working examples, complete with fully commented code, illustrate a few
@@ -43,8 +36,7 @@
 // 
 // About: Revision History
 // 
-// 0.4 - (6/22/2010) Added missing passthrough methods: exception,
-//       groupCollapsed, table
+// 0.4 - (6/22/2010) Added missing passthrough methods: exception, groupCollapsed, table
 // 0.3 - (6/8/2009) Initial release
 // 
 // Topic: Pass-through console methods
@@ -60,6 +52,7 @@
 window.debug = (function ()
 {
 	var window = this,
+	document = window.document,
 
 	// Some convenient shortcuts.
 	aps = Array.prototype.slice,
@@ -84,6 +77,9 @@ window.debug = (function ()
 	// fail gracefully. These methods are provided for convenience.
 	pass_methods = 'assert clear count dir dirxml exception group groupCollapsed groupEnd profile profileEnd table time timeEnd trace'.split(' '),
 	idx = pass_methods.length,
+
+	domInsertion = false,
+	domWriter = document.createElement('div'),
 
 	// Logs are stored here so that they can be recalled as necessary.
 	logs = [];
@@ -184,6 +180,12 @@ window.debug = (function ()
 				log_arr = [level].concat(args);
 
 				logs.push(log_arr);
+				if (domInsertion)
+				{
+					var txtNode = document.createTextNode(log_arr);
+					domWriter.appendChild(txtNode);
+					domWriter.appendChild(document.createElement('br'));
+				}
 				exec_callback(log_arr);
 
 				con = window.console; // A console might appears anytime
@@ -202,7 +204,7 @@ window.debug = (function ()
 				{
 					if (con[level])
 					{
-						if (typeof (console.log.apply) != "undefined")
+						if (typeof (console.log.apply) != 'undefined')
 						{
 							con[level].apply(con, args); // Chrome
 						}
@@ -211,9 +213,12 @@ window.debug = (function ()
 							con[level](args); // IE 8 (at least)
 						}
 					}
-					else // Fallback
+					else
 					{
-						con.log(args);
+						if (!domInsertion)
+						{
+							//alert('Meh! You have no console :-( You should use debug.setDomInsertion(true); or debug.exportLogs();');
+						}
 					}
 				}
 			};
@@ -295,6 +300,44 @@ window.debug = (function ()
 		while (i < max)
 		{
 			exec_callback(logs[i++]);
+		}
+	};
+
+	that.setDomInsertion = function (active, className)
+	{
+		domInsertion = active;
+		if (active && document.body)
+		{
+			document.body.appendChild(domWriter);
+			var c = 'debug';
+			if (typeof (className) == 'string')
+				c = className;
+			domWriter.className = c;
+		}
+		else
+			domWriter.parentNode.removeChild(domWriter);
+	};
+
+	function isElement(obj)
+	{
+		try
+		{
+			// Using W3 DOM2 (works for FF, Opera and Chrom)
+			return obj instanceof HTMLElement;
+		}
+		catch (e)
+		{
+			// Browsers not supporting W3 DOM2 don't have HTMLElement.
+			// Testing some properties that all elements have.
+			return (typeof obj === 'object') && (obj.nodeType === 1) && (typeof obj.style === 'object') && (typeof obj.ownerDocument === 'object');
+		}
+	}
+
+	that.exportLogs = function (elem)
+	{
+		if (isElement(elem))
+		{
+			elem.innerHTML = logs.join('<br />');
 		}
 	};
 
