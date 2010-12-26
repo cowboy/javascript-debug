@@ -198,22 +198,23 @@ window.debug = (function ()
 					return;
 				}
 
-				function trace(level)
-				{
-					if (typeof (con[level].apply) != 'undefined')
-					{
-						con[level].apply(con, args); // FireFox || Firebug Lite || Opera || Chrome
-					}
-					else
-					{
-						con[level](args); // IE 8 (at least)
-					}
-				}
-
-				con[level] ? trace(level) : trace('log'); // Degradation path
+				con[level] ? trace(level, args) : trace('log', args); // Degradation path
 			};
 
 		})(idx, log_methods[idx]);
+	}
+	
+	// Call the browser console logger
+	function trace(level, args)
+	{
+		if (typeof (con[level].apply) != 'undefined')
+		{
+			con[level].apply(con, args); // FireFox || Firebug Lite || Opera || Chrome
+		}
+		else
+		{
+			con[level](args); // IE 8 (at least)
+		}
 	}
 
 	// Execute the callback function if set.
