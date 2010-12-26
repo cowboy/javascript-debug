@@ -189,11 +189,18 @@ window.debug = (function ()
 
 				con = window.console; // A console might appears anytime
 
-				if (!con || !is_level(idx)) { return; }
+				if (!is_level(idx))
+					return;
 
-				if (con[level])
+				if (!con && !domInsertion)
 				{
-					if (typeof (console.log.apply) != 'undefined')
+					//alert('Meh! You have no console :-( You should use debug.setDomInsertion(true); or debug.exportLogs();');
+					return;
+				}
+
+				function trace(level)
+				{
+					if (typeof (con[level].apply) != 'undefined')
 					{
 						con[level].apply(con, args); // FireFox || Firebug Lite || Opera || Chrome
 					}
@@ -202,13 +209,8 @@ window.debug = (function ()
 						con[level](args); // IE 8 (at least)
 					}
 				}
-				else
-				{
-					if (!domInsertion)
-					{
-						//alert('Meh! You have no console :-( You should use debug.setDomInsertion(true); or debug.exportLogs();');
-					}
-				}
+
+				con[level] ? trace(level) : trace('log'); // Degradation path
 			};
 
 		})(idx, log_methods[idx]);
