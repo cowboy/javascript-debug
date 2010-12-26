@@ -57,7 +57,6 @@ window.debug = (function ()
 	// Some convenient shortcuts.
 	aps = Array.prototype.slice,
 	con = window.console,
-	opera = window.opera,
 
 	// Public object to be returned.
 	that = {},
@@ -192,33 +191,22 @@ window.debug = (function ()
 
 				if (!con || !is_level(idx)) { return; }
 
-				if (con.firebug || window.Firebug) // FireFox || Firebug Lite
+				if (con[level])
 				{
-					con[level].apply(con, args);
-				}
-				else if (opera && opera.postError) // Opera
-				{
-					opera.postError.apply(opera, args);
-				}
-				else
-				{
-					if (con[level])
+					if (typeof (console.log.apply) != 'undefined')
 					{
-						if (typeof (console.log.apply) != 'undefined')
-						{
-							con[level].apply(con, args); // Chrome
-						}
-						else
-						{
-							con[level](args); // IE 8 (at least)
-						}
+						con[level].apply(con, args); // FireFox || Firebug Lite || Opera || Chrome
 					}
 					else
 					{
-						if (!domInsertion)
-						{
-							//alert('Meh! You have no console :-( You should use debug.setDomInsertion(true); or debug.exportLogs();');
-						}
+						con[level](args); // IE 8 (at least)
+					}
+				}
+				else
+				{
+					if (!domInsertion)
+					{
+						//alert('Meh! You have no console :-( You should use debug.setDomInsertion(true); or debug.exportLogs();');
 					}
 				}
 			};
