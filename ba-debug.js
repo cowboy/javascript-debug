@@ -92,7 +92,22 @@ window.debug = (function ()
 			// exist, as long as the logging level is non-zero.
 			that[method] = function ()
 			{
-				log_level !== 0 && con && con[method] && con[method].apply(con, arguments);
+				con = window.console; // A console might appears anytime
+				
+				if(log_level !== 0 && con)
+				{
+					if(con[method] && typeof(con[method].apply) != 'undefined')
+						con[method].apply(con, arguments);
+					else
+					{
+						var args = aps.call(arguments);
+						if(method.indexOf('group') != -1)
+						{
+							args.unshift('['+method+']');
+							that['log'](args.join(' '));
+						}
+					}
+				}
 			}
 
 		})(pass_methods[idx]);
@@ -213,7 +228,7 @@ window.debug = (function ()
 		}
 		else
 		{
-			con[level](args); // IE 8 (at least)
+			con[level](args.join(' ')); // IE 8 (at least)
 		}
 	}
 
