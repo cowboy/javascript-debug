@@ -182,7 +182,7 @@ window.debug = (function(){
         if ( !con || !is_level( idx ) ) { return; }
         
         con.firebug ? con[ level ].apply( window, args )
-          : con[ level ] ? con[ level ]( args )
+          : con[ level ] ? con[ level ].apply( con, args )
           : con.log( args );
       };
       
